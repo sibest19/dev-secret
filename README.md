@@ -4,29 +4,6 @@ macOS Keychain-backed helper for local development secrets.
 
 Stores secrets in the native macOS Keychain and injects them into commands only when needed — no plaintext tokens in shell config files.
 
-## Requirements
-
-- macOS
-- `bash`, `security` (built-in on macOS)
-- Optional: `shellcheck`, `shfmt`, `bats-core` (dev only)
-
-## Install
-
-### For development
-
-```bash
-make install        # symlinks bin/dev-secret into ~/.local/bin
-make install-tools  # installs shellcheck, shfmt, bats-core via brew
-```
-
-Make sure `~/.local/bin` is in your `PATH`.
-
-### From remote
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/sibest19/dev-secret/main/install.sh | bash
-```
-
 ## Quick start
 
 ```bash
@@ -82,12 +59,12 @@ Skips dynamic assignments like `export TOKEN=$(gh auth token)` — import those 
 ### Touch ID
 
 ```bash
-dev-secret keychain biometric enable   # store keychain password in login keychain
-dev-secret keychain biometric disable  # remove it
+dev-secret keychain biometric enable   # enroll Touch ID unlock
+dev-secret keychain biometric disable  # remove enrollment
 dev-secret keychain biometric status   # show Touch ID availability and enabled state
 ```
 
-After enabling, unlocking the keychain retrieves the password from the login keychain, which triggers a Touch ID confirmation on supported hardware.
+After enabling, any keychain unlock triggers an explicit Touch ID prompt via `LocalAuthentication`. If Touch ID succeeds, the password is retrieved silently from the login keychain and used to unlock. Requires `swift` (Xcode CLT).
 
 `init` offers to enable biometric unlock automatically if Touch ID is available.
 
@@ -107,22 +84,25 @@ Stored at `~/.config/dev-secret/defaults`. One secret name per line.
 dev-secret init --defaults defaults/myteam
 ```
 
-## Development
+## Install
 
 ```bash
-make check    # syntax check + lint + format diff
-make fmt      # format in place
-make lint     # shellcheck only
-make test     # bats
+curl -fsSL https://raw.githubusercontent.com/sibest19/dev-secret/main/install.sh | bash
 ```
 
-## Local test keychain
+Or clone and link locally:
 
 ```bash
-export DEV_SECRET_KEYCHAIN_NAME="dev-secret-test"
-export DEV_SECRET_KEYCHAIN_PATH="$HOME/Library/Keychains/dev-secret-test.keychain-db"
-dev-secret init
+make install        # symlinks bin/dev-secret into ~/.local/bin
 ```
+
+Make sure `~/.local/bin` is in your `PATH`.
+
+## Requirements
+
+- macOS
+- `bash`, `security` (built-in on macOS)
+- `swift` — optional, required for biometric unlock (`xcode-select --install`)
 
 ## Environment variables
 
@@ -140,4 +120,26 @@ dev-secret init
 rm -f ~/.local/bin/dev-secret
 rm -rf ~/.config/dev-secret
 security delete-keychain "$HOME/Library/Keychains/dev-secrets.keychain-db"
+security delete-generic-password -a keychain-password -s it.simoneandreani.dev-secret.keychain-unlock \
+  ~/Library/Keychains/login.keychain-db 2>/dev/null || true
+```
+
+---
+
+## Development
+
+```bash
+make install-tools  # installs shellcheck, shfmt, bats-core via brew
+make check          # syntax check + lint + format diff
+make fmt            # format in place
+make lint           # shellcheck only
+make test           # bats
+```
+
+### Local test keychain
+
+```bash
+export DEV_SECRET_KEYCHAIN_NAME="dev-secret-test"
+export DEV_SECRET_KEYCHAIN_PATH="$HOME/Library/Keychains/dev-secret-test.keychain-db"
+dev-secret init
 ```
