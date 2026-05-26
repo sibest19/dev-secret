@@ -5,7 +5,7 @@ IFS=$'\n\t'
 SCRIPT_NAME="dev-secret"
 SCRIPT_DOWNLOAD_URL="https://raw.githubusercontent.com/sibest19/dev-secret/main/bin/dev-secret"
 # Update this hash whenever bin/dev-secret changes: shasum -a 256 bin/dev-secret
-EXPECTED_SHA256="05d23481a6832cb2c24b89ab867828dd73d5bb116bf8ee143a59c82296e2b08b"
+EXPECTED_SHA256="8a0579ed2e21c9e8aac0d3dc54ec40939f6bc11ffd79e79927ce0a30ed6c3bb4"
 INSTALL_DIR="${DEV_SECRET_INSTALL_DIR:-$HOME/.local/bin}"
 TARGET="$INSTALL_DIR/$SCRIPT_NAME"
 
