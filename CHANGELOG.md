@@ -6,6 +6,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
 ### Added
 
 - Releases now include their signed build provenance as an asset,
@@ -71,7 +73,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 Initial version (`c2f59b8`), installed from `main` with `install.sh`; never tagged.
 
-[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/sibest19/dev-secret/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/sibest19/dev-secret/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/sibest19/dev-secret/releases/tag/v0.2.0
 [0.1.0]: https://github.com/sibest19/dev-secret/tree/c2f59b8
