@@ -21,10 +21,9 @@ _Avoid_: test keychain, fake keychain
 ### Builds
 
 **Working copy**:
-The `dev-secret` script in a checkout of this repository, possibly modified and
-not yet reviewed.
-_Avoid_: dev build, local build
+The `dev-secret` script in the checkout being changed, including any copy on
+`PATH` that links to it.
 
 **Installed dev-secret**:
-A released `dev-secret` the user installed and runs day to day.
-_Avoid_: system dev-secret, production build
+A `dev-secret` on `PATH` that the user runs day to day, separate from the
+checkout being changed.

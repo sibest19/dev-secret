@@ -27,7 +27,8 @@ Branch commits matter too: the squash commit on `main` keeps their
   not enough: the login keychain, the keychain search list and the shell rc
   files are still found through `HOME`.
 - The **installed dev-secret** may read a **real keychain** (`get`, `run`,
-  `list`) when the user's task needs it. Before running it, tell the user which
+  `list`) when the user's task needs it. If `dev-secret` on `PATH` resolves
+  into the checkout (for example after `make link`), it is the working copy. Before running it, tell the user which
   secret names it reads and why: it may trigger a Touch ID or password prompt,
   and they should know what they are approving.
 - Never write to, delete from, lock, or unlock a real keychain (`set`,
