@@ -14,8 +14,8 @@ dev-secret keychain, or any other.
 _Avoid_: user keychain, production keychain
 
 **Throwaway keychain**:
-A keychain created under a temporary home directory for a test or an experiment,
-and deleted afterwards.
+A keychain created in a temporary directory for a test or an experiment, and
+deleted afterwards.
 _Avoid_: test keychain, fake keychain
 
 ### Builds

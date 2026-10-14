@@ -22,9 +22,10 @@ Branch commits matter too: the squash commit on `main` keeps their
 ## Keychains
 
 - Run the **working copy** (`bin/dev-secret`) and `security` itself only
-  against **throwaway keychains**: set `HOME` to a temporary directory, as
-  `test/test_helper.bash` does, or point `DEV_SECRET_KEYCHAIN_PATH` at a
-  keychain you created there.
+  against **throwaway keychains**, with `HOME` set to a temporary directory, as
+  `test/test_helper.bash` does. Overriding `DEV_SECRET_KEYCHAIN_PATH` alone is
+  not enough: the login keychain, the keychain search list and the shell rc
+  files are still found through `HOME`.
 - The **installed dev-secret** may read a **real keychain** (`get`, `run`,
   `list`) when the user's task needs it. Before running it, tell the user which
   secret names it reads and why: it may trigger a Touch ID or password prompt,
