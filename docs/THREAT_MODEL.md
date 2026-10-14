@@ -83,10 +83,6 @@ plaintext secrets still exist on disk.
 
 ## Known correctness bugs with security impact
 
-- Values containing non-printable bytes (including a trailing newline, as in
-  `echo "$TOKEN" | dev-secret set X --stdin`) are read back by `security -w` as
-  **hex**, so `get`/`run` return the wrong value. Tracked by a skipped test in
-  `test/integration/keychain.bats`.
 - `import-env` keeps whitespace before an inline comment (`TOKEN=abc  # note`
   stores `"abc "`). Tracked by a skipped test in `test/unit/scan.bats`.
 - `keychain biometric enable` uses `add-generic-password -U -A`, which fails
