@@ -102,8 +102,41 @@ EOF
 	[ "$output" = "abc" ]
 }
 
-@test "extract_assignment_value drops all whitespace before an inline comment" {
-	skip "known bug: 'abc  # c' keeps a trailing space, which is stored as part of the secret"
-	run call_fn extract_assignment_value 'GITHUB_TOKEN=abc  # two spaces'
-	[ "$output" = "abc" ]
+# expect_value LINE VALUE — extract_assignment_value turns LINE into exactly VALUE.
+expect_value() {
+	local got
+	got="$(call_fn extract_assignment_value "$1")"
+	if [ "$got" != "$2" ]; then
+		printf 'line:     %q\nexpected: %q\ngot:      %q\n' "$1" "$2" "$got"
+		return 1
+	fi
+}
+
+@test "extract_assignment_value drops all whitespace before an inline comment (#2)" {
+	expect_value 'GITHUB_TOKEN=abc  # two spaces' 'abc'
+	expect_value $'GITHUB_TOKEN=abc\t# tab' 'abc'
+	expect_value $'GITHUB_TOKEN=abc \t # mixed' 'abc'
+}
+
+@test "extract_assignment_value drops trailing whitespace without a comment (#2)" {
+	expect_value 'GITHUB_TOKEN=abc   ' 'abc'
+	expect_value $'GITHUB_TOKEN=abc\t\r' 'abc'
+}
+
+@test "extract_assignment_value unwraps quoted values followed by a comment (#2)" {
+	expect_value 'GITHUB_TOKEN="abc" # note' 'abc'
+	expect_value "GITHUB_TOKEN='abc'  # note" 'abc'
+	expect_value 'GITHUB_TOKEN="abc" # "quoted" note' 'abc'
+	expect_value 'GITHUB_TOKEN="abc"   ' 'abc'
+}
+
+@test "extract_assignment_value keeps '#' that does not start a comment" {
+	expect_value 'GITHUB_TOKEN=abc#def' 'abc#def'
+	expect_value 'GITHUB_TOKEN="abc # not a comment"' 'abc # not a comment'
+	expect_value "GITHUB_TOKEN='abc # not a comment' # but this is" 'abc # not a comment'
+}
+
+@test "extract_assignment_value keeps whitespace inside quotes" {
+	expect_value 'GITHUB_TOKEN="  padded  "' '  padded  '
+	expect_value 'GITHUB_TOKEN=" padded " # note' ' padded '
 }

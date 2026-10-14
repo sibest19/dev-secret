@@ -21,6 +21,9 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- `import-env` stored whitespace before an inline comment, a whole comment after a
+  tab, and the quote characters of a quoted value followed by a comment or
+  trailing spaces as part of the secret ([#2](https://github.com/sibest19/dev-secret/issues/2)).
 - Secret values and the keychain password no longer appear in process arguments,
   where `ps` shows them to other local users: they are sent to `security -i` on
   stdin, and `run` passes values through the environment. Values over about

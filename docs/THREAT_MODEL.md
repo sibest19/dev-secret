@@ -91,5 +91,5 @@ plaintext secrets still exist on disk.
 
 ## Known correctness bugs with security impact
 
-- `import-env` keeps whitespace before an inline comment (`TOKEN=abc  # note`
-  stores `"abc "`). Tracked by a skipped test in `test/unit/scan.bats`.
+
+None known. Open bugs are tracked in [GitHub issues](https://github.com/sibest19/dev-secret/issues?q=is%3Aissue+is%3Aopen+label%3Abug).
