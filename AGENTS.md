@@ -85,6 +85,6 @@ make audit-actions     # after changing .github/workflows/
 | `test/test_helper.bash` | temporary `HOME`, `call_fn` for internal functions |
 | `scripts/check-bash32` | rejects bash 4+ syntax |
 | `completions/`, `man/` | shell completions and the man page |
-| `install.sh` | curl installer; pins the hash of `bin/dev-secret` |
+| `install.sh` | curl installer, published with each release; pins the version and hash of `bin/dev-secret` |
 | `packaging/homebrew/` | Homebrew formula template |
 | `docs/THREAT_MODEL.md` | what is protected, and known weaknesses DS-1 to DS-5 |

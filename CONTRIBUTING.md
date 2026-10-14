@@ -69,7 +69,8 @@ apply.
 
 ## Releasing
 
-1. Update `VERSION` in `bin/dev-secret` and move the `Unreleased` entries in
+1. Update `VERSION` in `bin/dev-secret`, run `make update-hash` so the
+   installer pins the new release, and move the `Unreleased` entries in
    `CHANGELOG.md` under the new version.
 2. Commit, then create a signed tag: `git tag -s vX.Y.Z -m vX.Y.Z && git push --tags`.
 3. The release workflow checks that the tag matches `VERSION`, runs the tests,

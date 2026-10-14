@@ -37,19 +37,24 @@ test-unit: ## Fast tests; never touch a real keychain
 test-integration: ## Tests against a throwaway keychain (macOS only)
 	bats test/integration
 
-check-hash: ## Fail if install.sh does not pin the current bin/dev-secret
+check-hash: ## Fail if install.sh does not pin the current bin/dev-secret version and hash
 	@expected=$$(grep '^EXPECTED_SHA256=' install.sh | sed 's/EXPECTED_SHA256="//;s/"//'); \
 	actual=$$(shasum -a 256 bin/dev-secret | awk '{print $$1}'); \
-	if [ "$$expected" != "$$actual" ]; then \
-		printf 'Hash mismatch in install.sh\n  pinned:  %s\n  actual:  %s\n  Fix: make update-hash\n' "$$expected" "$$actual" >&2; \
+	pinned_version=$$(sed -n 's/^VERSION="\(.*\)"$$/\1/p' install.sh); \
+	version=$$($(MAKE) -s version); \
+	if [ "$$expected" != "$$actual" ] || [ "$$pinned_version" != "$$version" ]; then \
+		printf 'install.sh does not pin bin/dev-secret\n  pinned:  %s %s\n  actual:  %s %s\n  Fix: make update-hash\n' \
+			"$$pinned_version" "$$expected" "$$version" "$$actual" >&2; \
 		exit 1; \
 	fi; \
-	printf 'Hash OK: %s\n' "$$actual"
+	printf 'Hash OK: %s %s\n' "$$version" "$$actual"
 
-update-hash: ## Pin the current bin/dev-secret hash in install.sh
+update-hash: ## Pin the current bin/dev-secret version and hash in install.sh
 	@hash=$$(shasum -a 256 bin/dev-secret | awk '{print $$1}'); \
-	sed -i '' "s/^EXPECTED_SHA256=.*/EXPECTED_SHA256=\"$$hash\"/" install.sh; \
-	printf 'Updated EXPECTED_SHA256 → %s\n' "$$hash"
+	version=$$($(MAKE) -s version); \
+	sed -i '' -e "s/^EXPECTED_SHA256=.*/EXPECTED_SHA256=\"$$hash\"/" \
+		-e "s/^VERSION=.*/VERSION=\"$$version\"/" install.sh; \
+	printf 'Updated install.sh → %s %s\n' "$$version" "$$hash"
 
 secrets-scan: ## Scan git history for committed secrets
 	gitleaks git --redact --no-banner

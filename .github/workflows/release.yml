@@ -41,7 +41,8 @@ jobs:
           mkdir dist
           git archive --format=tar.gz --prefix="dev-secret-$version/" -o "dist/dev-secret-$version.tar.gz" "$GITHUB_REF_NAME"
           cp bin/dev-secret dist/dev-secret
-          (cd dist && shasum -a 256 dev-secret-*.tar.gz dev-secret >SHA256SUMS)
+          cp install.sh dist/install.sh
+          (cd dist && shasum -a 256 dev-secret-*.tar.gz dev-secret install.sh >SHA256SUMS)
           cat dist/SHA256SUMS
 
       - name: Attest build provenance
@@ -51,6 +52,7 @@ jobs:
           subject-path: |
             dist/dev-secret-*.tar.gz
             dist/dev-secret
+            dist/install.sh
 
       # Scorecard's Signed-Releases check only looks at release asset names, not
       # at the attestations API: *.intoto.jsonl counts as SLSA provenance.
