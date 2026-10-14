@@ -92,7 +92,8 @@ assert_keychain_untouched() {
 }
 
 @test "biometric status reports disabled when not enrolled" {
-	run "$DEV_SECRET_BIN" keychain biometric status
+	use_stubs touchid # never depend on the machine's real Touch ID state
+	FAKE_TOUCHID_STATE=2 run "$DEV_SECRET_BIN" keychain biometric status
 	[ "$status" -eq 0 ]
 	[[ "$output" == *"Touch ID: not available"* ]]
 	[[ "$output" == *"Enabled:   no"* ]]

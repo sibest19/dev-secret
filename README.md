@@ -117,6 +117,11 @@ the keychain password is read from the login keychain and used to unlock. `init`
 offers enrollment when Touch ID is available. Touch ID is a convenience, not a
 security boundary; see [Security](#security).
 
+If macOS locks Touch ID after too many failed attempts, `dev-secret` says so and
+asks for the keychain password instead. Enter your Mac password once (for
+example, lock and unlock the screen) to re-enable Touch ID; `dev-secret doctor`
+shows the current state.
+
 ## Defaults file
 
 `~/.config/dev-secret/defaults` lists one secret name per line. Install a team

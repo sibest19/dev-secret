@@ -6,6 +6,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- A Touch ID lockout (too many failed attempts) was reported as "Touch ID not
+  available", while `doctor` said Touch ID was available. The fallback message,
+  `doctor`, `keychain status` and `biometric status` now share one check and
+  name the reason, including how to clear a lockout ([#14](https://github.com/sibest19/dev-secret/issues/14)).
+
 ## [0.2.0] - 2026-10-14
 
 ### Added
