@@ -21,6 +21,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- Secret values and the keychain password no longer appear in process arguments,
+  where `ps` shows them to other local users: they are sent to `security -i` on
+  stdin, and `run` passes values through the environment. Values over about
+  1.9 KB still use an argument, with a warning ([#6](https://github.com/sibest19/dev-secret/issues/6)).
+- `keychain biometric enable` failed when re-enrolling an existing Touch ID
+  credential ([#4](https://github.com/sibest19/dev-secret/issues/4)).
 - `set --stdin` stored trailing newlines, and `get`/`run` returned any value
   containing a newline, tab or non-ASCII character as hex. Trailing
   newlines are now dropped on input, and values are read back byte-exact,

@@ -8,6 +8,10 @@ set -euo pipefail
 real=/usr/bin/security
 password="${DEV_SECRET_TEST_KEYCHAIN_PASSWORD:?set by test setup}"
 
+# Record the arguments dev-secret passed, so tests can assert that no secret
+# value ever appears on a command line (#6).
+printf '%s\n' "$*" >>"${BATS_TEST_TMPDIR:?}/argv.log"
+
 case "${1:-}" in
 create-keychain)
 	shift
