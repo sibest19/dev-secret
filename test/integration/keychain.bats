@@ -46,11 +46,36 @@ teardown() {
 	[ "$output" = "$value" ]
 }
 
-@test "values with a trailing newline round-trip" {
-	skip "known bug: security(1) -w prints values with non-printable bytes as hex, so 'echo x | set --stdin' reads back as 780a"
+@test "set --stdin drops trailing newlines from echo (#1)" {
 	echo 'ghp_123' | "$DEV_SECRET_BIN" set GITHUB_TOKEN --stdin
 	run "$DEV_SECRET_BIN" get GITHUB_TOKEN
 	[ "$output" = "ghp_123" ]
+}
+
+@test "set --stdin drops trailing CRLF line endings" {
+	printf 'ghp_123\r\n\r\n' | "$DEV_SECRET_BIN" set GITHUB_TOKEN --stdin
+	run "$DEV_SECRET_BIN" run GITHUB_TOKEN -- /usr/bin/printenv GITHUB_TOKEN
+	[ "$output" = "ghp_123" ]
+}
+
+@test "values security(1) treats as non-printable round-trip exactly (#1)" {
+	# security -w prints most of these as bare hex; -g uses its 0x form for all.
+	for value in $'tab\there' 'back\slash' 'café' 'key🔑' $'multi\nline' $'\x7f'; do
+		printf '%s' "$value" | "$DEV_SECRET_BIN" set ODD_SECRET --stdin
+		run "$DEV_SECRET_BIN" get ODD_SECRET
+		[ "$output" = "$value" ]
+		run "$DEV_SECRET_BIN" run ODD_SECRET -- /usr/bin/printenv ODD_SECRET
+		[ "$output" = "$value" ]
+	done
+}
+
+@test "secrets stored with a trailing newline by older versions read back correctly (#1)" {
+	/usr/bin/security add-generic-password -a LEGACY_TOKEN -s it.simoneandreani.dev-secret.LEGACY_TOKEN \
+		-w $'ghp_legacy\n' -A "$KEYCHAIN"
+	run "$DEV_SECRET_BIN" run LEGACY_TOKEN -- /bin/sh -c 'printf "[%s]" "$LEGACY_TOKEN"'
+	[ "$output" = "[ghp_legacy]" ]
+	run "$DEV_SECRET_BIN" get LEGACY_TOKEN
+	[ "$output" = "ghp_legacy" ]
 }
 
 @test "set overwrites an existing value" {

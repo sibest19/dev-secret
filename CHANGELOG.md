@@ -21,6 +21,10 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- `set --stdin` stored trailing newlines, and `get`/`run` returned any value
+  containing a newline, tab or non-ASCII character as hex. Trailing
+  newlines are now dropped on input, and values are read back byte-exact,
+  including ones stored by earlier versions ([#1](https://github.com/sibest19/dev-secret/issues/1)).
 - `init` corrupted the user keychain search list: indented `security list-keychains`
   output was parsed wrongly, so every run added mangled paths and duplicated the
   dedicated keychain.
