@@ -6,6 +6,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Releases now include their signed build provenance as an asset,
+  `dev-secret-X.Y.Z.intoto.jsonl`. Before, it was only available through
+  GitHub's attestations API. `SECURITY.md` explains how to verify a download
+  with it ([#17](https://github.com/sibest19/dev-secret/issues/17)).
+
 ## [0.2.1] - 2026-10-14
 
 ### Fixed
