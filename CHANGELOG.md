@@ -6,6 +6,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-14
+
 ### Fixed
 
 - A Touch ID lockout (too many failed attempts) was reported as "Touch ID not
@@ -54,6 +56,7 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 Initial version (`c2f59b8`), installed from `main` with `install.sh`; never tagged.
 
-[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/sibest19/dev-secret/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/sibest19/dev-secret/releases/tag/v0.2.0
 [0.1.0]: https://github.com/sibest19/dev-secret/tree/c2f59b8
