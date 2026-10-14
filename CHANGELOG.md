@@ -6,6 +6,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-14
+
 ### Added
 
 - Repository scaffolding: bats test suites (unit and integration), ShellCheck and
@@ -43,7 +45,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [0.1.0]
 
-Initial version, distributed as a standalone script before this repository existed.
+Initial version (`c2f59b8`), installed from `main` with `install.sh`; never tagged.
 
-[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/sibest19/dev-secret/releases/tag/v0.1.0
+[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/sibest19/dev-secret/releases/tag/v0.2.0
+[0.1.0]: https://github.com/sibest19/dev-secret/tree/c2f59b8
