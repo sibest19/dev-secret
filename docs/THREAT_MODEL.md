@@ -28,6 +28,7 @@ No network access, no daemons, no runtime dependencies beyond macOS base tools.
 | Long-lived unlocked access | The dedicated keychain auto-locks after 1 hour (`set-keychain-settings -lut 3600`) |
 | Shell injection via secret names | Names are restricted to `[A-Za-z_][A-Za-z0-9_]*` before any use |
 | Data loss when cleaning rc files | `import-env` writes a `0600` backup of every file it changes |
+| Installing unreleased or tampered code with `install.sh` | The installer is a release asset; it installs only its own release's script and checks it against a SHA256 pinned per release. Releases come from signed tags and carry build provenance attestations |
 
 ## Out of scope
 

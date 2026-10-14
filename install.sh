@@ -3,9 +3,11 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_NAME="dev-secret"
-SCRIPT_DOWNLOAD_URL="https://raw.githubusercontent.com/sibest19/dev-secret/main/bin/dev-secret"
-# Update this hash whenever bin/dev-secret changes: shasum -a 256 bin/dev-secret
+# The release this installer installs, and the SHA256 of its dev-secret asset.
+# Both are pinned by `make update-hash` and checked by `make check-hash`.
+VERSION="0.2.1"
 EXPECTED_SHA256="66cfa8747c7537d3a0e7b2292f64ea98d2aa56337f8b9afb3ddd3919aa518ef1"
+SCRIPT_DOWNLOAD_URL="https://github.com/sibest19/dev-secret/releases/download/v$VERSION/dev-secret"
 INSTALL_DIR="${DEV_SECRET_INSTALL_DIR:-$HOME/.local/bin}"
 TARGET="$INSTALL_DIR/$SCRIPT_NAME"
 
@@ -42,7 +44,7 @@ chmod +x "$tmp"
 mv "$tmp" "$TARGET"
 trap - EXIT
 
-say "Installed $SCRIPT_NAME to $TARGET"
+say "Installed $SCRIPT_NAME $VERSION to $TARGET"
 
 case ":$PATH:" in
 *":$INSTALL_DIR:"*) ;;

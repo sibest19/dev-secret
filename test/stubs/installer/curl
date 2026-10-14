@@ -1,0 +1,23 @@
+#!/bin/bash
+# Test double for curl(1), used by the install.sh tests. Never touches the
+# network: records each call in $BATS_TEST_TMPDIR/curl.calls and writes
+# $CURL_STUB_FILE (default: the working copy's bin/dev-secret) to the -o path.
+set -euo pipefail
+
+printf '%s\n' "$*" >>"$BATS_TEST_TMPDIR/curl.calls"
+
+out=""
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-o)
+		out="$2"
+		shift
+		;;
+	esac
+	shift
+done
+[ -n "$out" ] || {
+	echo "curl stub: no -o given" >&2
+	exit 2
+}
+cp "${CURL_STUB_FILE:-$REPO_ROOT/bin/dev-secret}" "$out"

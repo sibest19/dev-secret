@@ -13,6 +13,14 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   GitHub's attestations API. `SECURITY.md` explains how to verify a download
   with it ([#17](https://github.com/sibest19/dev-secret/issues/17)).
 
+### Changed
+
+- `install.sh` installed whatever `bin/dev-secret` was on `main`, checked against
+  a hash that also came from `main`. It now downloads the `dev-secret` asset of
+  a pinned release, and is itself published as a release asset: install with
+  `curl -fsSL https://github.com/sibest19/dev-secret/releases/latest/download/install.sh | bash`
+  ([#8](https://github.com/sibest19/dev-secret/issues/8)).
+
 ## [0.2.1] - 2026-10-14
 
 ### Fixed

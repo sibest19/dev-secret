@@ -44,3 +44,15 @@ Releases after v0.2.1 also attach the attestation to the release as
 `dev-secret-X.Y.Z.intoto.jsonl` (a Sigstore bundle), so you can verify without
 querying GitHub's attestations API by adding
 `--bundle dev-secret-X.Y.Z.intoto.jsonl`.
+
+The installer is a release asset too, from the release after v0.2.1 on. It
+installs the `dev-secret` asset of its own release and refuses one whose SHA256
+differs from the hash pinned in it, so a change on `main` reaches installs
+only through a new signed release. To check the installer before running it:
+
+```sh
+curl -fsSLO https://github.com/sibest19/dev-secret/releases/latest/download/install.sh
+gh attestation verify install.sh --repo sibest19/dev-secret \
+  --signer-workflow sibest19/dev-secret/.github/workflows/release.yml
+bash install.sh
+```

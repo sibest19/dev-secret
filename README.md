@@ -29,12 +29,16 @@ $ dev-secret run GITHUB_TOKEN -- gh auth status
 
 ## Install
 
-With the installer, which verifies the script's SHA256 before installing it into
+With the installer of the latest release, which downloads that release's script,
+checks it against the SHA256 pinned in the installer, and installs it into
 `~/.local/bin`:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/sibest19/dev-secret/main/install.sh | bash
+curl -fsSL https://github.com/sibest19/dev-secret/releases/latest/download/install.sh | bash
 ```
+
+To check the installer before running it, see
+[Verifying what you run](SECURITY.md#verifying-what-you-run).
 
 From source, which also installs the man page and shell completions:
 
@@ -173,7 +177,7 @@ make help           # list targets
 
 Tests never touch your real keychain: integration tests create throwaway
 keychains under a temporary `HOME`. After changing `bin/dev-secret`, run
-`make update-hash` so `install.sh` pins the new version. See
+`make update-hash` so `install.sh` pins its version and hash. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
