@@ -1,0 +1,6 @@
+# bin/dev-secret pins #!/bin/bash, i.e. macOS's bash 3.2. Lint everything as bash.
+shell=bash
+# Follow `source` statements so helper functions are checked in context.
+external-sources=true
+# Resolve `# shellcheck source=` paths relative to the file being checked.
+source-path=SCRIPTDIR

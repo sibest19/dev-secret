@@ -1,0 +1,35 @@
+name: Bug report
+description: Something does not work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste real secret values.** Use placeholders like `ghp_EXAMPLE`.
+        Security problems go through [private reporting](https://github.com/sibest19/dev-secret/security/advisories/new), not issues.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Command you ran, what you expected, what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `dev-secret doctor`
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: dev-secret version
+      placeholder: output of `dev-secret version`
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: output of `sw_vers -productVersion`
+    validations:
+      required: true

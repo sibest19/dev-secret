@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # gitleaks scans the full history
+      - run: brew install shellcheck shfmt gitleaks zizmor
+      - run: make lint
+      - run: make fmt-check
+      - run: make check-hash
+      - run: mandoc -T lint -W warning man/dev-secret.1
+      - run: zsh -n completions/_dev-secret
+      - run: make secrets-scan
+      - name: Audit workflows (zizmor)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: make audit-actions
+
+  test:
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: brew install bats-core
+      - name: Unit tests
+        run: make test-unit
+      - name: Integration tests (throwaway keychain)
+        run: make test-integration

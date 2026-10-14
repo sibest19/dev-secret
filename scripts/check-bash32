@@ -1,0 +1,50 @@
+#!/bin/bash
+# Fail if any FILE uses syntax newer than bash 3.2 (macOS's /bin/bash).
+# Tests run under /bin/bash too, but only cover the code paths they execute;
+# this catches the rest. Whole-line comments are ignored.
+#   scripts/check-bash32 FILE...
+# Reasons quote bash syntax literally, e.g. '${var,,}'.
+# shellcheck disable=SC2016
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+	echo "usage: $0 FILE..." >&2
+	exit 2
+fi
+
+patterns=()
+reasons=()
+add() {
+	patterns+=("$1")
+	reasons+=("$2")
+}
+
+add '\b(mapfile|readarray|coproc)\b' 'mapfile/readarray/coproc need bash 4'
+add '\b(declare|local|typeset|readonly)[[:space:]]+-[a-zA-Z]*[Anlu]' 'associative arrays, namerefs and case attributes need bash 4'
+add '\[\[[[:space:]]+-v[[:space:]]' '[[ -v NAME ]] needs bash 4.2'
+add '\$\{[A-Za-z_][A-Za-z0-9_]*(\[[^]]*\])?(,|\^)' '${var,,} / ${var^^} case conversion needs bash 4'
+add '\$\{[^}]*@[QEPAaKkUuL]\}' '${var@Q}-style transformations need bash 4.4+'
+add '\[-[0-9]+\]\}' 'negative array subscripts need bash 4.3'
+add '&>>|\|&' '&>> and |& need bash 4'
+add ';;&|;&[[:space:]]*$' 'case fall-through (;& and ;;&) needs bash 4'
+add '\b(EPOCHSECONDS|EPOCHREALTIME|BASH_ARGV0|SRANDOM)\b' 'variable needs bash 5'
+add '\bshopt[[:space:]]+-s.*\b(globstar|lastpipe|autocd|checkjobs|direxpand|dirspell|localvar_inherit)\b' 'shell option needs bash 4+'
+add '\bwait[[:space:]]+-n\b' 'wait -n needs bash 4.3'
+add '\bread[[:space:]]+(-[a-zA-Z]+[[:space:]]+)*-[a-zA-Z]*i' 'read -i needs bash 4'
+add '%\([^)]*\)T' 'printf %(...)T needs bash 4.2'
+add '\{[[:alnum:]]+\.\.[[:alnum:]]+\.\.' 'brace expansion with a step needs bash 4'
+
+status=0
+for file in "$@"; do
+	for i in "${!patterns[@]}"; do
+		while IFS= read -r hit; do
+			printf '%s:%s\n    %s\n' "$file" "$hit" "${reasons[i]}"
+			status=1
+		done < <(grep -nE -- "${patterns[i]}" "$file" | grep -vE '^[0-9]+:[[:space:]]*#' || true)
+	done
+done
+
+if [[ $status -eq 0 ]]; then
+	echo "bash 3.2 compatible: $*"
+fi
+exit "$status"

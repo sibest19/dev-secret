@@ -1,0 +1,6 @@
+.DS_Store
+*.keychain-db
+*.bak.dev-secret.*
+*.tmp.dev-secret.*
+.env
+.env.*

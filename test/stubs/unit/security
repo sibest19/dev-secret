@@ -1,0 +1,7 @@
+#!/bin/bash
+# Unit-test double for security(1): records the call and fails.
+# Unit tests assert this log stays empty to prove input is rejected before
+# any keychain access happens.
+printf '%s\n' "$*" >>"${BATS_TEST_TMPDIR:?}/security.calls"
+echo "stub security: unit tests must not reach the keychain" >&2
+exit 1

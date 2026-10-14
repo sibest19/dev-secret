@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[{bin/*,*.bash,*.bats,test/stubs/*/*,Makefile}]
+indent_style = tab
+# shfmt: keep `case` items flush with `case`, as the existing code does
+switch_case_indent = false
+
+[*.{md,yml,yaml,rb,rb.tmpl}]
+indent_style = space
+indent_size = 2

@@ -1,0 +1,31 @@
+#!/bin/bash
+# Integration-test wrapper around the real security(1).
+# - Supplies the throwaway keychain's password so nothing prompts.
+# - Never modifies the developer's keychain search list.
+# Everything else is passed through unchanged.
+set -euo pipefail
+
+real=/usr/bin/security
+password="${DEV_SECRET_TEST_KEYCHAIN_PASSWORD:?set by test setup}"
+
+case "${1:-}" in
+create-keychain)
+	shift
+	[[ "${1:-}" == "-P" ]] && shift
+	exec "$real" create-keychain -p "$password" "$@"
+	;;
+unlock-keychain)
+	shift
+	[[ "${1:-}" == "-p" ]] && exec "$real" unlock-keychain "$@"
+	exec "$real" unlock-keychain -p "$password" "$@"
+	;;
+list-keychains)
+	for arg in "$@"; do
+		[[ "$arg" == "-s" ]] && exit 0
+	done
+	exec "$real" "$@"
+	;;
+*)
+	exec "$real" "$@"
+	;;
+esac

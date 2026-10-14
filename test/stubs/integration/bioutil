@@ -1,0 +1,3 @@
+#!/bin/bash
+# Report Touch ID as unavailable so tests never trigger biometric prompts.
+exit 1
