@@ -165,7 +165,7 @@ Report vulnerabilities privately; see [SECURITY.md](SECURITY.md).
 ## Development
 
 ```sh
-make install-tools  # bats-core, shellcheck, shfmt, gitleaks via Homebrew
+make install-tools  # bats-core, shellcheck, shfmt, gitleaks, zizmor via Homebrew
 make check          # lint + bash 3.2 check + format check + installer hash + all tests
 make link           # symlink bin/dev-secret into ~/.local/bin while developing
 make help           # list targets
