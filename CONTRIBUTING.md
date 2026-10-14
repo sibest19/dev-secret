@@ -6,9 +6,12 @@ Thanks for helping. `dev-secret` handles credentials, so the bar for changes is
 ## Setup
 
 ```sh
-brew install bats-core shellcheck shfmt gitleaks
+make install-tools  # bats-core, shellcheck, shfmt, gitleaks, zizmor via Homebrew
 make check
 ```
+
+Using an AI coding agent? Point it at [AGENTS.md](AGENTS.md). You are the author of
+what you submit, whatever tools you used.
 
 `make test-unit` never touches a real keychain. `make test-integration` creates
 throwaway keychains under a temporary `HOME` and deletes them afterwards; it does
@@ -34,6 +37,24 @@ not modify your login keychain or your keychain search list.
    gets a test marked with `skip "known bug: …"`.
 6. **Security-relevant changes update [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md).**
 7. `make check` must pass. Formatting is whatever `make fmt` produces.
+8. After changing `bin/dev-secret`, run `make update-hash` so `install.sh` pins
+   the new version. After changing `.github/workflows/`, run `make audit-actions`.
+
+## Issues and pull requests
+
+- **Start from an issue.** One problem per issue, one issue per pull request,
+  and the PR body says `Fixes #N`. If you find a second problem along the way,
+  open another issue rather than widening the PR. Release PRs, Dependabot
+  updates and typo-level docs fixes need no issue.
+- **The PR title becomes the commit.** `main` only accepts squash merges, so the
+  title is the commit subject on `main`: imperative, sentence case, no prefix
+  like `feat:` (for example, "Report why Touch ID cannot be used, consistently").
+- **Merging needs** the `Lint` and `Test` checks passing on a branch that is up
+  to date with `main`, and every review thread resolved. Signing your branch
+  commits is welcome but not required; the squash commit on `main` is signed.
+- **CHANGELOG.** Every user-visible change gets an entry under `Unreleased`,
+  written from the user's side: what used to happen and what happens now. Link
+  the issue. Changes to internals, tests or CI need no entry.
 
 ## Tests
 
