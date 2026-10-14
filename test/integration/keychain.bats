@@ -138,3 +138,15 @@ EOF
 	run "$DEV_SECRET_BIN" get GITHUB_TOKEN
 	[ "$status" -eq 1 ]
 }
+
+@test "import-env stores values without comments, quotes or trailing whitespace (#2)" {
+	printf '%s\n' \
+		'export GITHUB_TOKEN="ghp_quoted" # personal' \
+		$'export SENTRY_AUTH_TOKEN=sntrys_tab\t# work' \
+		'export NPM_TOKEN=npm_spaces   ' >"$HOME/.zshrc"
+	run "$DEV_SECRET_BIN" import-env --yes "$HOME/.zshrc"
+	[ "$status" -eq 0 ]
+	run "$DEV_SECRET_BIN" run GITHUB_TOKEN SENTRY_AUTH_TOKEN NPM_TOKEN -- \
+		/bin/sh -c 'printf "[%s][%s][%s]" "$GITHUB_TOKEN" "$SENTRY_AUTH_TOKEN" "$NPM_TOKEN"'
+	[ "$output" = "[ghp_quoted][sntrys_tab][npm_spaces]" ]
+}

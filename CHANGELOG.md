@@ -21,6 +21,9 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- `import-env` stored whitespace before an inline comment, a whole comment after a
+  tab, and the quote characters of a quoted value followed by a comment or
+  trailing spaces as part of the secret ([#2](https://github.com/sibest19/dev-secret/issues/2)).
 - `init` corrupted the user keychain search list: indented `security list-keychains`
   output was parsed wrongly, so every run added mangled paths and duplicated the
   dedicated keychain.

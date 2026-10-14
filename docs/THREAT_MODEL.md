@@ -87,8 +87,6 @@ plaintext secrets still exist on disk.
   `echo "$TOKEN" | dev-secret set X --stdin`) are read back by `security -w` as
   **hex**, so `get`/`run` return the wrong value. Tracked by a skipped test in
   `test/integration/keychain.bats`.
-- `import-env` keeps whitespace before an inline comment (`TOKEN=abc  # note`
-  stores `"abc "`). Tracked by a skipped test in `test/unit/scan.bats`.
 - `keychain biometric enable` uses `add-generic-password -U -A`, which fails
   without a GUI prompt when the item already exists, so re-enrolling (for
   example after changing the keychain password) fails. The same issue in `set`
