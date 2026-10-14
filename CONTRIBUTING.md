@@ -26,6 +26,8 @@ not modify your login keychain or your keychain search list.
 2. **No new runtime dependencies.** Only tools that ship with macOS.
 3. **Never print, log, or `set -x` a secret value**, including in tests and error
    messages. Use placeholder values in tests and issues.
+   Never pass one as a command-line argument either: use `keychain_write` and
+   `keychain_unlock`, which send it to `security -i` on stdin.
 4. **Validate input before touching the keychain.** Unit tests assert this with a
    stub `security` that records any call.
 5. **Every behaviour change comes with a test.** A known bug that is not fixed yet

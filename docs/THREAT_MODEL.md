@@ -56,14 +56,22 @@ The Touch ID check only gates `dev-secret`'s own code path.
 A real fix needs a keychain item protected by `SecAccessControl` with a biometry
 policy, which requires a native, code-signed helper rather than `security(1)`.
 
-### DS-2: Secret values appear in process arguments
+### DS-2: Very large secrets appear in process arguments
 
-- `set` and `import-env` pass the value to `security add-generic-password -w VALUE`.
-- `run` uses `env NAME=VALUE command`.
+Command lines are visible to other users on the same machine through `ps`, so
+secrets and keychain passwords are sent to `security -i` on **stdin**, hex-encoded,
+and `run` hands values to the command through its environment (`export` + `exec`)
+([#6](https://github.com/sibest19/dev-secret/issues/6)).
 
-For the lifetime of those processes the value is visible in their argument list,
-which `ps` can show to other users on the same machine. Planned fix:
-`export` + `exec` for `run`; feed `security -i` over stdin for writes.
+`security -i` splits lines longer than 4096 bytes. Values longer than about
+1.9 KB (hex doubles their size) therefore fall back to
+`security add-generic-password -w VALUE`, and `set` prints a warning: such a
+value is visible in the process list for the moment it takes to store it.
+
+Two traps of `security -i` are guarded against: a write naming a missing
+keychain file silently goes to the login keychain, so writes require the file to
+exist; and some failures only show on stderr, so every write is read back from
+the target keychain and compared.
 
 ### DS-3: Touch ID prompt compiles Swift at runtime
 
@@ -83,11 +91,5 @@ plaintext secrets still exist on disk.
 
 ## Known correctness bugs with security impact
 
-- Values containing non-printable bytes (including a trailing newline, as in
-  `echo "$TOKEN" | dev-secret set X --stdin`) are read back by `security -w` as
-  **hex**, so `get`/`run` return the wrong value. Tracked by a skipped test in
-  `test/integration/keychain.bats`.
-- `keychain biometric enable` uses `add-generic-password -U -A`, which fails
-  without a GUI prompt when the item already exists, so re-enrolling (for
-  example after changing the keychain password) fails. The same issue in `set`
-  was fixed; this one is still open.
+
+None known. Open bugs are tracked in [GitHub issues](https://github.com/sibest19/dev-secret/issues?q=is%3Aissue+is%3Aopen+label%3Abug).

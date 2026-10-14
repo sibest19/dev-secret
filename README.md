@@ -68,11 +68,12 @@ See `man dev-secret` for details.
 
 ```sh
 dev-secret set GITHUB_TOKEN                               # interactive prompt
-printf '%s' "$(gh auth token)" | dev-secret set GITHUB_TOKEN --stdin
+gh auth token | dev-secret set GITHUB_TOKEN --stdin          # from stdin
 ```
 
-With `--stdin`, pipe the value **without a trailing newline** (`printf '%s'`, not
-`echo`); see [known issues](docs/THREAT_MODEL.md#known-correctness-bugs-with-security-impact).
+With `--stdin`, trailing newlines are dropped, so `echo "$TOKEN" | dev-secret set …` is fine.
+Any other byte is stored and returned exactly, including tabs, newlines inside the
+value and non-ASCII text.
 
 ### Run a command with secrets
 

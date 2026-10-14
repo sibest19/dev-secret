@@ -1,0 +1,4 @@
+#!/bin/bash
+# Record the arguments like the security wrapper does, then run the real env.
+printf '%s\n' "$*" >>"${BATS_TEST_TMPDIR:?}/argv.log"
+exec /usr/bin/env "$@"
