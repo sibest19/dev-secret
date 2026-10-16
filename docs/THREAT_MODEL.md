@@ -54,6 +54,13 @@ whole login session, so any process running as you can read that password with
 `security find-generic-password` and unlock the dedicated keychain without Touch ID.
 The Touch ID check only gates `dev-secret`'s own code path.
 
+The prompt names the program that started `dev-secret` and what it will do
+([#26](https://github.com/sibest19/dev-secret/issues/26)). Both come from the
+processes involved: a program chooses its own process name, and any process
+running as you can show an identical Touch ID dialog with any text. The text
+helps you decide; it does not prove what will happen, and approving unlocks the
+whole keychain, not only the secrets named.
+
 A real fix needs a keychain item protected by `SecAccessControl` with a biometry
 policy, which requires a native, code-signed helper rather than `security(1)`.
 

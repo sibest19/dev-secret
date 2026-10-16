@@ -121,6 +121,17 @@ the keychain password is read from the login keychain and used to unlock. `init`
 offers enrollment when Touch ID is available. Touch ID is a convenience, not a
 security boundary; see [Security](#security).
 
+The prompt says which program asked, what it is about to do and which secrets are
+involved, and the same text is printed on stderr first:
+
+```text
+Touch ID: let claude run "npm publish --access public" with GITHUB_TOKEN, NPM_TOKEN from dev-secret
+```
+
+The program is the nearest one above `dev-secret` that is not a shell. Programs
+choose their own names, so treat this as information, not proof: once unlocked,
+the whole keychain stays open for up to an hour.
+
 If macOS locks Touch ID after too many failed attempts, `dev-secret` says so and
 asks for the keychain password instead. Enter your Mac password once (for
 example, lock and unlock the screen) to re-enable Touch ID; `dev-secret doctor`

@@ -6,6 +6,17 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- The Touch ID prompt always said "Unlock dev-secrets keychain", whatever was
+  asking and whatever it would do with the secrets. It now names the program
+  that started `dev-secret`, the action, the command for `run`, and every
+  secret involved, for example `let claude read GITHUB_TOKEN with dev-secret`.
+  The same text is printed on stderr before the prompt. `import-env` now asks
+  for Touch ID after you confirm the import, so the prompt can list those
+  secrets, and not at all when there is nothing to import
+  ([#26](https://github.com/sibest19/dev-secret/issues/26)).
+
 ## [0.3.0] - 2026-10-14
 
 ### Added

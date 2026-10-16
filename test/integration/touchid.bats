@@ -5,6 +5,8 @@
 
 load '../test_helper'
 
+bats_require_minimum_version 1.5.0
+
 setup() {
 	[[ "$OSTYPE" == darwin* ]] || skip "requires macOS Keychain"
 	isolate_home
@@ -31,9 +33,10 @@ teardown() {
 }
 
 @test "Touch ID success unlocks without asking for the keychain password" {
-	FAKE_TOUCHID_STATE=0 FAKE_TOUCHID_AUTH=0 run "$DEV_SECRET_BIN" get GITHUB_TOKEN
+	FAKE_TOUCHID_STATE=0 FAKE_TOUCHID_AUTH=0 run --separate-stderr "$DEV_SECRET_BIN" get GITHUB_TOKEN
 	[ "$status" -eq 0 ]
 	[ "$output" = "tok" ]
+	[[ "$stderr" == "Touch ID: "*"read GITHUB_TOKEN with dev-secret" ]]
 	[ "$(wc -l <"$BATS_TEST_TMPDIR/touchid.prompts")" -eq 1 ]
 	run grep -c '^unlock-keychain' "$BATS_TEST_TMPDIR/argv.log"
 	[ "$output" = "0" ]
@@ -54,4 +57,13 @@ teardown() {
 	[ "$status" -eq 1 ]
 	[[ "$output" == *"Touch ID authentication failed or was cancelled"* ]]
 	[[ "$output" != *"tok"* ]]
+}
+
+@test "import-env unlocks with Touch ID after confirming, naming the secrets (#26)" {
+	printf 'export NPM_TOKEN=npm-placeholder\n' >"$HOME/.zshrc"
+	FAKE_PS_CHAIN="/bin/zsh:claude" FAKE_TOUCHID_STATE=0 FAKE_TOUCHID_AUTH=0 \
+		run "$DEV_SECRET_BIN" import-env --yes "$HOME/.zshrc"
+	[ "$status" -eq 0 ]
+	[ "$(cat "$BATS_TEST_TMPDIR/touchid.prompts")" = "prompt: let claude import NPM_TOKEN into dev-secret" ]
+	[ "$(call_fn get_secret NPM_TOKEN)" = "npm-placeholder" ]
 }

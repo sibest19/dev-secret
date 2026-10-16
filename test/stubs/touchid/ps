@@ -1,0 +1,19 @@
+#!/bin/bash
+# Stand-in for `ps -o ppid=,comm= -p PID`, so tests control which program
+# appears to have started dev-secret.
+#   FAKE_PS_CHAIN: the commands of dev-secret's ancestors separated by ":",
+#                  parent first, e.g. "/bin/zsh:claude". The last one's parent
+#                  is PID 1. Empty: ps fails. Unset: the real ps runs.
+# The first query is for a real PID; fake PIDs from 900000 index the chain.
+[[ -n "${FAKE_PS_CHAIN+set}" ]] || exec /bin/ps "$@"
+[[ -n "$FAKE_PS_CHAIN" ]] || exit 1
+
+pid="${*: -1}"
+IFS=: read -r -a chain <<<"$FAKE_PS_CHAIN"
+i=0
+((pid < 900000)) || i=$((pid - 900000))
+((i < ${#chain[@]})) || exit 1
+
+ppid=$((900000 + i + 1))
+((i + 1 < ${#chain[@]})) || ppid=1
+printf '%5d %s\n' "$ppid" "${chain[$i]}"

@@ -7,6 +7,8 @@
 
 load '../test_helper'
 
+bats_require_minimum_version 1.5.0
+
 setup() {
 	[[ "$OSTYPE" == darwin* ]] || skip "requires macOS Keychain"
 	isolate_home
@@ -108,7 +110,7 @@ refute_in_argv() {
 	/usr/bin/security lock-keychain "$KEYCHAIN"
 	: >"$BATS_TEST_TMPDIR/argv.log"
 
-	PATH="$BATS_TEST_TMPDIR/touchid:$PATH" run "$DEV_SECRET_BIN" get GITHUB_TOKEN
+	PATH="$BATS_TEST_TMPDIR/touchid:$PATH" run --separate-stderr "$DEV_SECRET_BIN" get GITHUB_TOKEN
 	[ "$status" -eq 0 ]
 	[ "$output" = "tok" ]
 	refute_in_argv "$DEV_SECRET_TEST_KEYCHAIN_PASSWORD"

@@ -6,7 +6,7 @@ SCRIPT_NAME="dev-secret"
 # The release this installer installs, and the SHA256 of its dev-secret asset.
 # Both are pinned by `make update-hash` and checked by `make check-hash`.
 VERSION="0.3.0"
-EXPECTED_SHA256="4b22b54889ea3211fe7cdb85f183d3a5008b7e102eebadcf0f045c1ef16716df"
+EXPECTED_SHA256="bf2e21576e50e8a26cd6d5febcbd4819a43dd71a0d4f8a45150d7b043a2566dc"
 SCRIPT_DOWNLOAD_URL="https://github.com/sibest19/dev-secret/releases/download/v$VERSION/dev-secret"
 INSTALL_DIR="${DEV_SECRET_INSTALL_DIR:-$HOME/.local/bin}"
 TARGET="$INSTALL_DIR/$SCRIPT_NAME"
