@@ -6,6 +6,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Future versions are licensed under AGPL-3.0-or-later instead of MIT. Versions
+  previously published under MIT retain their original license
+  ([#32](https://github.com/sibest19/dev-secret/issues/32)).
+
 ## [0.4.0] - 2026-10-16
 
 ### Changed

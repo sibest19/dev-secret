@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 Simone Andreani
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# See https://www.gnu.org/licenses/agpl-3.0.html for the license and warranty disclaimer.
+
 set -euo pipefail
 IFS=$'\n\t'
 
@@ -6,7 +10,7 @@ SCRIPT_NAME="dev-secret"
 # The release this installer installs, and the SHA256 of its dev-secret asset.
 # Both are pinned by `make update-hash` and checked by `make check-hash`.
 VERSION="0.4.0"
-EXPECTED_SHA256="7c1baf5d37d3310c80208b6192e5f95091158182ddce1306382d56c06b4ddb26"
+EXPECTED_SHA256="f5aadc082f4b4ed63f35345168f117a2dca790a3e9f42da0db7fb4b44aad154a"
 SCRIPT_DOWNLOAD_URL="https://github.com/sibest19/dev-secret/releases/download/v$VERSION/dev-secret"
 INSTALL_DIR="${DEV_SECRET_INSTALL_DIR:-$HOME/.local/bin}"
 TARGET="$INSTALL_DIR/$SCRIPT_NAME"
