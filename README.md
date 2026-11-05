@@ -193,4 +193,9 @@ keychains under a temporary `HOME`. After changing `bin/dev-secret`, run
 
 ## License
 
-[MIT](LICENSE)
+Copyright (c) 2026 Simone Andreani.
+
+Licensed under the [GNU Affero General Public License, version 3 or later](LICENSE)
+(`AGPL-3.0-or-later`).
+
+Versions published under MIT before this change remain available under MIT.

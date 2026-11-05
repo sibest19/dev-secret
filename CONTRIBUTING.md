@@ -19,6 +19,9 @@ not modify your login keychain or your keychain search list.
 
 ## Ground rules
 
+Contributions are licensed under the project's GNU Affero General Public License,
+version 3 or later (`AGPL-3.0-or-later`); see [LICENSE](LICENSE).
+
 1. **Bash 3.2.** The script runs under macOS's `/bin/bash`. No `mapfile`,
    associative arrays, `${var,,}`, or `[[ -v ]]`. Expand possibly-empty arrays as
    `${arr[@]+"${arr[@]}"}`. `make lint` runs `scripts/check-bash32` to catch
