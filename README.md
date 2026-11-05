@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/sibest19/dev-secret/actions/workflows/ci.yml/badge.svg)](https://github.com/sibest19/dev-secret/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/sibest19/dev-secret/badge)](https://scorecard.dev/viewer/?uri=github.com/sibest19/dev-secret)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16357/badge)](https://www.bestpractices.dev/projects/16357)
 
 Keep developer secrets out of your dotfiles. `dev-secret` stores tokens and
 passwords in a dedicated macOS keychain and hands them to **one command at a
