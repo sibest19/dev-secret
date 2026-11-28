@@ -133,6 +133,18 @@ The program is the nearest one above `dev-secret` that is not a shell. Programs
 choose their own names, so treat this as information, not proof: once unlocked,
 the whole keychain stays open for up to an hour.
 
+The prompt has room for about 40 characters of a command. For `run`, a
+`dev-secret` panel opens below the prompt with the rest: the program that asked,
+every secret name, and the whole command, one quoted argument at a time, with
+invisible characters written as escapes such as `\n` or `\u{202E}`. The panel
+only informs: you approve or cancel in the macOS prompt, and the panel closes
+with it. On a screen too small to fit both, only the prompt is shown.
+
+Touch ID requests from `dev-secret` take turns. A second request waits, without
+showing anything, until the first prompt is gone, so a panel is never next to
+another request's prompt. Interrupting a request (Ctrl-C) ends it; it does not
+fall back to the keychain password.
+
 If macOS locks Touch ID after too many failed attempts, `dev-secret` says so and
 asks for the keychain password instead. Enter your Mac password once (for
 example, lock and unlock the screen) to re-enable Touch ID; `dev-secret doctor`

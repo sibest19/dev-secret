@@ -1,12 +1,17 @@
 #!/bin/bash
 # Stand-in for `swift -` running dev-secret's Touch ID snippet.
 #   FAKE_TOUCHID_STATE: 0 usable, 2 not available, 3 locked out
-#   FAKE_TOUCHID_AUTH:  result of the prompt, 0 success or 1 failure
+#   FAKE_TOUCHID_AUTH:  exit status of the prompt: 0 success, 1 failure, or
+#                       anything else the real snippet could end with
 # Every prompt that would be shown is recorded in touchid.prompts, with the
-# reason the dialog would show.
+# reason the dialog would show. When dev-secret sends request details for the
+# panel, the bytes it sent are saved in touchid.details.
 cat >/dev/null
 state="${FAKE_TOUCHID_STATE:-0}"
 [[ "$state" == 0 ]] || exit "$state"
 [[ "${DEV_SECRET_TOUCHID_CHECK_ONLY:-}" == check ]] && exit 0
 printf 'prompt: %s\n' "${DEV_SECRET_TOUCHID_REASON:-}" >>"${BATS_TEST_TMPDIR:?}/touchid.prompts"
+if [[ "${DEV_SECRET_TOUCHID_DETAILS:-}" == 1 ]]; then
+	cat <&3 >"$BATS_TEST_TMPDIR/touchid.details"
+fi
 exit "${FAKE_TOUCHID_AUTH:-0}"

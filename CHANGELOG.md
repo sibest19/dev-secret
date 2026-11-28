@@ -8,6 +8,19 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+- The Touch ID prompt for `run` only had room for the first 40 characters of
+  the command, which is rarely enough to tell what you are approving. A
+  `dev-secret` panel now opens below the prompt with the whole command, the
+  program that asked and every secret name. Invisible characters in arguments
+  are shown as escapes. Touch ID requests from `dev-secret` now take turns, so
+  a panel is not shown next to another `dev-secret` request's prompt
+  ([#39](https://github.com/sibest19/dev-secret/issues/39)).
+- Interrupting a Touch ID request, or a request that failed for an unexpected
+  reason, used to ask for the keychain password. It now stops. The password is
+  still asked when Touch ID cannot be used: no sensor or fingerprints, a
+  lockout, or no `swift`
+  ([#39](https://github.com/sibest19/dev-secret/issues/39)).
+
 - Future versions are licensed under AGPL-3.0-or-later instead of MIT. Versions
   previously published under MIT retain their original license
   ([#32](https://github.com/sibest19/dev-secret/issues/32)).

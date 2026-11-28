@@ -61,6 +61,24 @@ running as you can show an identical Touch ID dialog with any text. The text
 helps you decide; it does not prove what will happen, and approving unlocks the
 whole keychain, not only the secrets named.
 
+For `run`, a panel below the prompt shows the whole command, the requester and
+the secret names ([#39](https://github.com/sibest19/dev-secret/issues/39)). The
+same limits apply to it:
+
+- It is a `dev-secret` window, not part of the macOS prompt. Any process running
+  as you can open a window that looks the same.
+- `dev-secret` requests take turns through a lock file in your per-user
+  temporary directory, so a panel is not shown next to another `dev-secret`
+  prompt. Other applications and older versions of `dev-secret` do not take
+  part: their prompts can still appear while a panel is open.
+- The command's arguments are shown on screen while the prompt is open. They
+  are sent to the panel on a pipe and are not written to a file, the terminal
+  or a command line. Secret values are never read for the panel.
+
+Only "Touch ID cannot be used" (no sensor or fingerprints, a lockout, or no
+`swift`) falls back to the keychain password. A cancelled or interrupted
+request, or one that ends in any other way, stops.
+
 A real fix needs a keychain item protected by `SecAccessControl` with a biometry
 policy, which requires a native, code-signed helper rather than `security(1)`.
 
@@ -85,6 +103,7 @@ the target keychain and compared.
 
 `touchid_authenticate` pipes Swift source to the first `swift` found on `PATH` on
 every unlock. That is slow, needs the Xcode Command Line Tools, and trusts `PATH`.
+The source also loads AppKit, to draw the panel that shows `run` requests.
 Planned fix: a small prebuilt helper, built by the Homebrew formula.
 
 ### DS-4: `get` prints secrets to the terminal
