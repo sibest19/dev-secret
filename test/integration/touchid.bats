@@ -67,3 +67,20 @@ teardown() {
 	[ "$(cat "$BATS_TEST_TMPDIR/touchid.prompts")" = "prompt: let claude import NPM_TOKEN into dev-secret" ]
 	[ "$(call_fn get_secret NPM_TOKEN)" = "npm-placeholder" ]
 }
+
+@test "run with Touch ID passes every argument to the command unchanged (#39)" {
+	# The script is passed to sh as is: it expands there, not here.
+	# shellcheck disable=SC2016
+	local script='printf "%s|" "$GITHUB_TOKEN" "$#" "$@"'
+	FAKE_PS_CHAIN="/bin/zsh:claude" FAKE_TOUCHID_STATE=0 FAKE_TOUCHID_AUTH=0 \
+		run --separate-stderr "$DEV_SECRET_BIN" run GITHUB_TOKEN -- \
+		/bin/sh -c "$script" sh "" "two words" 'quo"te' "$(printf 'line\nfeed')"
+	[ "$status" -eq 0 ]
+	[ "$output" = "$(printf 'tok|4||two words|quo"te|line\nfeed|')" ]
+	printf '%s\0' claude 1 GITHUB_TOKEN /bin/sh -c "$script" sh "" "two words" 'quo"te' \
+		"$(printf 'line\nfeed')" >"$BATS_TEST_TMPDIR/expected.details"
+	cmp "$BATS_TEST_TMPDIR/expected.details" "$BATS_TEST_TMPDIR/touchid.details"
+	[[ "$stderr" != *"two words"* ]]
+	run grep -c 'tok' "$BATS_TEST_TMPDIR/touchid.details"
+	[ "$output" = "0" ]
+}

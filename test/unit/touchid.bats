@@ -165,3 +165,69 @@ assert_reason() {
 	[[ "$output" == *"No plaintext env secrets found."* ]]
 	assert_never_prompted
 }
+
+# The panel below the prompt shows the whole request (#39). dev-secret sends it
+# to the Touch ID snippet on its own pipe; the stub saves what arrives.
+
+@test "run sends the requester, every name and the whole command for the panel (#39)" {
+	local long="--message=this argument is far longer than the forty characters the prompt keeps"
+	with_cancelled_touchid "/bin/zsh:claude" run GITHUB_TOKEN NPM_TOKEN -- \
+		deploy "" "two words" 'quo"te' 'back\slash' "$(printf 'line\nfeed')" "café ✓" "$long"
+
+	printf '%s\0' claude 2 GITHUB_TOKEN NPM_TOKEN \
+		deploy "" "two words" 'quo"te' 'back\slash' "$(printf 'line\nfeed')" "café ✓" "$long" \
+		>"$BATS_TEST_TMPDIR/expected.details"
+	cmp "$BATS_TEST_TMPDIR/expected.details" "$BATS_TEST_TMPDIR/touchid.details"
+
+	# The terminal keeps the short form only.
+	[[ "$output" != *"forty characters"* ]]
+}
+
+@test "run sends an empty requester when there is none (#39)" {
+	with_cancelled_touchid "/bin/zsh" run GITHUB_TOKEN -- true
+	printf '%s\0' "" 1 GITHUB_TOKEN true >"$BATS_TEST_TMPDIR/expected.details"
+	cmp "$BATS_TEST_TMPDIR/expected.details" "$BATS_TEST_TMPDIR/touchid.details"
+}
+
+@test "only run sends details for the panel (#39)" {
+	with_cancelled_touchid "/bin/zsh:claude" get GITHUB_TOKEN
+	with_cancelled_touchid "/bin/zsh:claude" list
+	with_cancelled_touchid "/bin/zsh:claude" delete GITHUB_TOKEN
+	with_cancelled_touchid "/bin/zsh:claude" keychain unlock
+	[ ! -e "$BATS_TEST_TMPDIR/touchid.details" ]
+}
+
+# with_touchid_result STATE AUTH: run a command that would leave a marker, with
+# Touch ID ending in the given way.
+with_touchid_result() {
+	enable_biometric
+	mkdir -p "$HOME/Library/Keychains"
+	touch "$HOME/Library/Keychains/dev-secrets.keychain-db"
+	rm -f "$BATS_TEST_TMPDIR/security.calls"
+	FAKE_TOUCHID_STATE="$1" FAKE_TOUCHID_AUTH="$2" run "$DEV_SECRET_BIN" run GITHUB_TOKEN -- \
+		touch "$BATS_TEST_TMPDIR/command-ran"
+	[ ! -e "$BATS_TEST_TMPDIR/command-ran" ]
+}
+
+@test "only missing biometrics, a lockout and missing swift fall back to the password (#39)" {
+	local state
+	for state in 2 3 4; do
+		with_touchid_result "$state" 0
+		[[ "$output" == *"Falling back to the keychain password."* ]]
+		[ "$(cat "$BATS_TEST_TMPDIR/security.calls")" = "unlock-keychain $HOME/Library/Keychains/dev-secrets.keychain-db" ]
+	done
+	assert_never_prompted
+}
+
+@test "an interrupted or failed Touch ID request never asks for the password (#39)" {
+	local result
+	# 1 cancelled, 5 could not take turns, 70 unexpected, 130 and 143 killed by
+	# SIGINT and SIGTERM.
+	for result in 1 5 70 130 143; do
+		with_touchid_result 0 "$result"
+		[ "$status" -eq 1 ]
+		[[ "$output" == *"Touch ID"*"failed"* ]]
+		[[ "$output" != *"Falling back"* ]]
+		[ ! -e "$BATS_TEST_TMPDIR/security.calls" ]
+	done
+}
