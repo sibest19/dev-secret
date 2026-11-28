@@ -6,6 +6,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-28
+
 ### Changed
 
 - The Touch ID prompt for `run` only had room for the first 40 characters of
@@ -20,7 +22,6 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   still asked when Touch ID cannot be used: no sensor or fingerprints, a
   lockout, or no `swift`
   ([#39](https://github.com/sibest19/dev-secret/issues/39)).
-
 - Future versions are licensed under AGPL-3.0-or-later instead of MIT. Versions
   previously published under MIT retain their original license
   ([#32](https://github.com/sibest19/dev-secret/issues/32)).
@@ -105,7 +106,8 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 Initial version (`c2f59b8`), installed from `main` with `install.sh`; never tagged.
 
-[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/sibest19/dev-secret/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/sibest19/dev-secret/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/sibest19/dev-secret/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/sibest19/dev-secret/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/sibest19/dev-secret/compare/v0.2.0...v0.2.1
